@@ -1,0 +1,49 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#define LINES 100
+using namespace std;
+ 
+int main() {
+    setlocale(LC_ALL, "ua");
+    
+    system("chcp 1251");
+    system("cls");
+    char line[LINES][100];
+    char str[30];
+    char s[] = "|                   |               |                  |";
+    // Ввод данных для размещаемой 
+    cout << "Expeditor: ";
+    cin.getline(str, 30); // вводим ФИО
+    for (int i = 0; str[i] != '\0'; i++) // копируем в строку без 0
+        s[i+ 2] = str[i];               // начиная с указанной позиции
+    cout << "Kilkist tovaru: ";
+    cin.getline(str, 30);
+    for (int i = 0; str[i] != '\0'; i++)
+        s[i+ 33] = str[i];
+    cout << "Nazva tovaru: ";
+    cin.getline(str, 30);
+    for (int i = 0; str[i] != '\0'; i++)
+        s[i+ 50] = str[i];
+    fstream inOut;
+    inOut.open("C:\\File.txt", ios::in); // открываем файл для ввода
+    // Считываем из файла имеющиеся данные
+    int count = 0;
+    while (inOut.getline(line[count], 100)) count++;
+    inOut.close(); // закрываем файл
+
+    inOut.open("C:\\File.txt", ios::out); // открываем файл для вывода
+    inOut << "--------------------------------------------------------------------------------" << endl;
+    inOut << "|Прізвище |К-сть товару| Назва товару|" << endl;
+    inOut << "--------------------------------------------------------------------------------" << endl;
+    inOut << s << endl; // выводим сформированную строку
+    inOut << "--------------------------------------------------------------------------------" << endl;
+    // Выводим обратно в файл все строки кроме "шапки" (первые 3 строки)
+    for (int j = 3; j < count; j++)
+    {
+        inOut << line[j] << endl;
+    }
+    inOut.close();
+    cin.get();
+    return 0;
+}
