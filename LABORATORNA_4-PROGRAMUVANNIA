@@ -1,0 +1,43 @@
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class Tank{
+public:    
+    int ammunition;
+    double fuel;
+    int targets_hit;
+    bool hit_chance;
+    
+    void Print(){ /* відповідає за вивід поточного стану танка */
+        
+        cout << "Залишилося снарядів: " << ammunition << "\nЗалишилося палива: " << fuel << "\nВлучено цілей: " << targets_hit;
+    };
+    double Move_tank(){ /* відповідає за рух танка */
+        double a;
+        cout << "Скільки кілометрів треба проїхати: ";
+        cin >> a;
+        return fuel = fuel - a;
+    };
+    int Shoot_tank(){ /* відповідає за проведення пострілу танка */
+        hit_chance = rand();
+        if (hit_chance == 1){
+            targets_hit++;
+        }
+        return ammunition--;
+    }
+};
+int main(){
+    
+    Tank Tiger;
+    Tiger.ammunition = 92;
+    Tiger.fuel = 530;
+    Tiger.targets_hit = 0;
+    
+    Tiger.Shoot_tank();
+    Tiger.Move_tank();
+    Tiger.Print();
+    
+    
+    return 0;
+}
