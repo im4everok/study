@@ -1,0 +1,156 @@
+#include <iostream>
+#include <windows.h>
+using namespace std;
+
+int main() {
+    int max, r1, r2, Ineed,zcount=0,fcount=0;
+    int** buf;
+    bool check=true;
+    cout << "Введіть першу розмірність(A): ";
+    cin >> r1;
+    cout << "Введіть другу розмірність(B): ";
+    cin >> r2;
+    int* arr1 = new int[r1];
+    int* arr2 = new int[r2];
+    int* Ibuf = new int[r1];
+    int* FOM = new int[r1];
+    buf = new int*[r1];
+    if (r1 >= r2)max = r1;
+    else
+    {
+        max = r2;
+    }
+    cout << "Введіть першу множину(A): ";
+    for (int i = 0; i < r1; i++)
+    {
+        cin >> arr1[i];
+    }
+    cout << "Введіть другу множину(B): ";
+    for (int i = 0; i < r2; i++)
+    {
+        cin >> arr2[i];
+    }
+    cout << "Індекс ";
+    for (int i = 1; i <= r1; i++)
+    {
+        cout << i<<" ";
+    }
+    cout << " Введіть 0 для нульового посилання"<<endl<<"(A)   ";
+    for (int i = 0; i < r1; i++)
+    {
+        cout << arr1[i] << " ";
+    }
+    cout << endl << "(B)   ";
+    for (int i = 0; i < r2; i++)
+    {
+        cout << arr2[i] << " ";
+    }
+    cout << endl << endl;;
+    for (int i = 0; i < max; i++)
+    {
+        if (i < r1)cout<<"  "<< arr1[i]<<"         ";
+        else
+        {
+            cout << "            ";
+        }
+        if (i < r2)cout << arr2[i] << endl;
+        else
+        {
+            cout << endl;
+        }
+        cout << endl;
+    }
+    for (int i = 0; i < r1; i++)
+    {
+        cout << "Введіть кількість посилань "<<i+1<<" Елемент: ";
+        cin >> Ineed;
+        if (Ineed>0 && Ineed<=r1)
+        {
+            buf[i] = new int[Ineed];
+            Ibuf[i] = Ineed;
+            cout << "Введіть посилання: ";
+            for (int q = 0; q < Ineed; q++)
+            {
+                cin >> buf[i][q];
+            }
+        }
+        else
+        {
+            buf[i] = new int[1];
+            buf[i][0] = 0;
+            check = false;
+        }
+    }
+    system("color 07");
+    POINT op;
+    HWND hWnd = GetConsoleWindow();
+    HDC hDC = GetDC(hWnd);
+    SelectObject(hDC, GetStockObject(WHITE_PEN));
+    for (int i = 0; i < r1; i++)
+    {
+        for (int z = 0; z < Ibuf[i]; z++)
+        {
+            if (buf[i][z] > 0 && buf[i][z] <= r2)
+            {
+                MoveToEx(hDC, 30, 170 + 40 * i, &op);
+                LineTo(hDC, 110, 170 + 40 * (buf[i][z] - 1));
+            }   
+        }        
+    }     
+    ReleaseDC(hWnd, hDC);
+    for (int i = 0; i < r1; i++)
+    {
+        if (Ibuf[i]>1)
+        {
+            check = false;
+            break;
+        }
+    }
+    if (check==false)
+    {
+        cout << "Задано невірно\n";
+        return 0;
+    }
+    else
+    {
+        cout << "Задано вірно\n";
+        for (int i = 0; i < r1; i++)FOM[i] = i + 1;
+        for (int i = 0; i < r1; i++)
+        {
+            for (int q = 0; q < r1; q++)if (buf[i][0] == FOM[q])zcount++;
+            for (int q = 0; q < r1; q++)if (FOM[i] == buf[q][0])fcount++;
+            if (zcount == 0)
+            {
+                check = false;
+                goto End;
+            }
+            if (fcount == 0)
+            {
+                check = false;
+                goto End;
+            }
+            zcount = 0;
+            fcount = 0;
+        }
+        check = true;
+    End:
+        if (check==true && r2==r1)
+        {
+            cout << "Бієктивне\n";
+        }
+        else if(check == true && r2 > r1)
+        {
+            cout << "Ін'єктивне\n";
+        }
+        else if (check == false && r1 > r2)
+        {
+            cout << "Сур'єктивне\n";
+        }
+        else
+        {
+            cout << "Не ін'єктивне не сур'єктивне\n";
+        }
+    }
+    std::cin.get();
+    return 0;
+} 
