@@ -1,0 +1,80 @@
+#include <iostream>
+#include <string>
+using namespace std;
+class Tank
+{
+private:
+    int m_fuel;
+    int m_ammunition;
+
+public:
+    Tank() {  // Конструктор за замовчуванням (інакше оператори при перегрузці видають помилку //
+        m_fuel = 10;
+        m_ammunition = 10;
+    }
+    Tank(int ammunition, int fuel)   // Сеттер //
+    {
+        m_fuel = fuel;
+        m_ammunition = ammunition;
+    }
+    
+    friend bool operator ==(const Tank& c1, const Tank& c2);  // Перегрузка оператора "рівно" //
+    friend bool operator >(const Tank& c3, const Tank& c4);   //Перегрузка оператора "більше" //
+
+    Tank operator +(const Tank& other)  // Перегрузка оператора "додати" як метод класу" 
+    {
+        Tank vrem;
+        vrem.m_ammunition = this->m_ammunition + other.m_ammunition;
+        vrem.m_fuel = this->m_fuel + other.m_fuel;
+        return vrem;
+    };
+    Tank & operator ++(int value) {  //Перегрузка постфіксного інкремента //
+        Tank prem(*this);
+        this->m_ammunition++;
+        this->m_fuel++;
+        return prem;
+    }
+    void Print() { /* відповідає за вивід поточного стану після операцій */
+
+        cout << "\nЗалишилося снарядів: " <<m_ammunition << "\nЗалишилося палива: " << m_fuel;
+    }
+};
+
+bool operator ==(const Tank& c1, const Tank& c2) // Реалізація оператора "рівно" //
+{
+    return (c1.m_fuel == c2.m_fuel &&
+        c1.m_ammunition == c2.m_ammunition);
+}
+bool operator >(const Tank& c3, const Tank& c4) { // Реалізація оператора "більше" 
+    return (c3.m_fuel > c4.m_fuel &&
+        c3.m_ammunition > c4.m_ammunition);
+}
+
+
+int main()
+{
+    setlocale(LC_ALL, "Ukrainian");
+    Tank TigerH1(720, 98);  // два танки для порівняння, т.п
+    Tank T34(515, 56);
+
+    if (TigerH1 == T34) 
+        cout << "Tanks are the same.\n";
+    else {
+        cout << "Thats not the same tank \n";
+    }
+    if (TigerH1 > T34) {
+        cout << "First' tank ammo and fuel are bigger \n";
+    }
+    else {
+        cout << "First' tank ammo and fuel aren't bigger \n";
+    }
+
+    Tank a = TigerH1 + T34; // створюємо ще один обєкт класу який зберігає результат додавання 
+    
+    
+    TigerH1.Print();
+    a.Print();   // Вивід суми
+    Tank b = TigerH1++;
+    b.Print();   // вивід першого танку після інкременту 
+    return 0;
+}
